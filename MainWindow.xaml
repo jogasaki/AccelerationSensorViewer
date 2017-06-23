@@ -1,0 +1,72 @@
+﻿<Window x:Class="AccelerationSensorViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:local="clr-namespace:AccelerationSensorViewer"
+        Closed="ChartWindow_Closed"
+        Name="ChartWindow"
+        Title="MainWindow" Height="650" Width="600">
+
+    <Window.DataContext>
+        <local:LineChartViewModel />
+    </Window.DataContext>
+    
+    <Grid>
+        <Menu Height="20" VerticalAlignment="Top">
+            <MenuItem Header="ファイル">
+                <MenuItem Header="接続" Click="MenuItemEnd_Click"/>
+                <Separator />
+                <MenuItem Header="終了" Click="MenuItemEnd_Click"/>
+                <!--<MenuItem Command="ApplicationCommands.Cut"/>-->                
+            </MenuItem>
+            <MenuItem Header="設定">
+                <MenuItem Header="ポート設定" Click="MenuItemSettingPort_Click"/>
+            </MenuItem>
+            <MenuItem Header="表示">
+                <MenuItem Header="グラフクリア" Click="MenuItemClearGraph_Click"/>
+                <MenuItem Name="menuHidenGraph" Header="グラフ非表示" Click="MenuItemHiddenGraph_Click"/>
+            </MenuItem>
+        </Menu>
+        
+        <StackPanel Height="85" Orientation="Horizontal" VerticalAlignment="Top" Margin="10, 20,10,10">
+            <GroupBox Header="表示/非表示" Width="90" HorizontalAlignment="Left">
+                <StackPanel Margin="5">
+                    <CheckBox Name="chkXVisible" IsChecked="True" Checked="chkVisible_Checked" Unchecked="chkVisible_Unchecked">X軸</CheckBox>
+                    <CheckBox Name="chkYVisible" IsChecked="True" Checked="chkVisible_Checked" Unchecked="chkVisible_Unchecked">Y軸</CheckBox>
+                    <CheckBox Name="chkZVisible" IsChecked="True" Checked="chkVisible_Checked" Unchecked="chkVisible_Unchecked">Z軸</CheckBox>
+                </StackPanel>
+            </GroupBox>
+            <Ellipse Name="elAction" Width="20" Height="20" Fill="Black"></Ellipse>
+            <CheckBox Name="chkWindowLink" Width="100" Height="20" Margin="20" IsChecked="False">WindowLink</CheckBox>
+        </StackPanel>
+        <Grid Name="grdGraph" Margin="10,120,10,10">
+            <oxy:Plot Name="lineChartView" Background="Black" PlotAreaBorderColor="Transparent" 
+                  LegendBackground="DarkCyan" LegendSymbolLength="20"
+                  LegendTextColor="White" 
+                  LegendTitle="グラフの種類" LegendTitleColor="White">
+                
+                <oxy:Plot.Series >
+                    <oxy:LineSeries Name="lineSeriesX" ItemsSource="{Binding XValues}" Color="Red"/>
+                    <oxy:LineSeries Name="lineSeriesY" ItemsSource="{Binding YValues}" Color="LightGreen"/>
+                    <oxy:LineSeries Name="lineSeriesZ" ItemsSource="{Binding ZValues}" Color="Blue"/>
+                </oxy:Plot.Series>
+                
+                <oxy:Plot.Axes>
+                    <oxy:LinearAxis Position="Left" AxislineColor="Gray" 
+                                    Maximum="{Binding  ElementName=ChartWindow, Path=VerticalScaleMax}" 
+                                    Minimum="{Binding  ElementName=ChartWindow, Path=VerticalScaleMin}" 
+                                    MajorGridlineStyle="Solid" MajorGridlineColor="Gray"
+                                    MinorGridlineStyle="Dot" MinorGridlineColor="Gray" 
+                                    TicklineColor="White" TextColor="White" />
+
+                    <oxy:LinearAxis Position="Bottom" 
+                                    Maximum="{Binding  ElementName=ChartWindow, Path=HorizontalScaleMax}" 
+                                    Minimum="{Binding  ElementName=ChartWindow, Path=HorizontalScaleMin}" 
+                                    MajorGridlineStyle="Solid" MajorGridlineColor="Gray"
+                                    MinorGridlineStyle="Dot" MinorGridlineColor="Gray" 
+                                    />
+                </oxy:Plot.Axes>
+            </oxy:Plot>
+        </Grid>
+    </Grid>
+</Window>
